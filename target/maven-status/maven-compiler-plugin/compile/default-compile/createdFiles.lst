@@ -1,0 +1,7 @@
+com\unipoint\merchant\service\impl\MerchantCustomerServiceImpl.class
+com\unipoint\merchant\model\MerchantCustomer.class
+com\unipoint\merchant\dataaccess\impl\MerchantCustomerDaoImpl.class
+com\unipoint\merchant\controller\CustomerController.class
+com\unipoint\merchant\dataaccess\MerchantCustomerDao.class
+com\unipoint\merchant\config\ApplicationSwaggerConfig.class
+com\unipoint\merchant\service\MerchantCustomerService.class
