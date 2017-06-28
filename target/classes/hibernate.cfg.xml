@@ -1,10 +1,91 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC
-    "-//Hibernate/Hibernate Configuration DTD//EN"
-    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
-
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-	<session-factory>
+        <session-factory>             
+        <mapping class="com.unipoint.merchant.model.AccessPrivilleges" />
+		<!--<mapping class="com.unipoint.merchant.model.AccessPrivilleges_"/> -->
+		<mapping class="com.unipoint.merchant.model.AppInvite" />
+		<!--<mapping class="com.unipoint.merchant.model.AppInvite_"/> -->
+		<mapping class="com.unipoint.merchant.model.AssignedCoupons" />
+		<!--<mapping class="com.unipoint.merchant.model.AssignedCoupons_"/> -->
+		<mapping class="com.unipoint.merchant.model.AssingedVoucher" />
+		<!--<mapping class="com.unipoint.merchant.model.AssingedVoucher_"/> -->
+		<mapping class="com.unipoint.merchant.model.BuyPoint" />
+		<!--<mapping class="com.unipoint.merchant.model.BuyPoint_"/> -->
+		<mapping class="com.unipoint.merchant.model.BuzzedMe" />
+		<!--<mapping class="com.unipoint.merchant.model.buzzedme_"/> -->
+		<mapping class="com.unipoint.merchant.model.Currency" />
+		<mapping class="com.unipoint.merchant.model.CardLog" />
+		<mapping class="com.unipoint.merchant.model.Catagory" />
+		<mapping class="com.unipoint.merchant.model.Coupons" />
+		<!--<mapping class="com.unipoint.merchant.model.currency"/> -->
+		<mapping class="com.unipoint.merchant.model.CustomerRequests" />
+		<!--<mapping class="com.unipoint.merchant.model.CustomerRequests_"/> -->
+		<mapping class="com.unipoint.merchant.model.DisabledCustomer" />
+		<!--<mapping class="com.unipoint.merchant.model.DisabledCustomer_"/> -->
+		<mapping class="com.unipoint.merchant.model.Faq" />
+		<!--<mapping class="com.unipoint.merchant.model.Faq_"/> -->
+		<mapping class="com.unipoint.merchant.model.FeedbackTemplate" />
+		<!--<mapping class="com.unipoint.merchant.model.FeedbackTemplate_"/> -->
+		<mapping class="com.unipoint.merchant.model.Leaflet" />
+		<!--<mapping class="com.unipoint.merchant.model.Leaflet_"/> -->
+		<mapping class="com.unipoint.merchant.model.LoyaltyScheme" />
+		<!--<mapping class="com.unipoint.merchant.model.LoyaltyScheme_"/> -->
+		<mapping class="com.unipoint.merchant.model.Merchant" />
+		<mapping class="com.unipoint.merchant.model.MerchantCategory" />
+		<!--<mapping class="com.unipoint.merchant.model.MerchantCategory_"/> -->
 		<mapping class="com.unipoint.merchant.model.MerchantCustomer" />
-	</session-factory>
+		<mapping class="com.unipoint.merchant.model.MerchantCustomerUnipointRewards" />
+		<!--<mapping class="com.unipoint.merchant.model.MerchantCustomerUnipointRewardsPK_"/> -->
+		<!--<mapping class="com.unipoint.merchant.model.MerchantCustomerUnipointRewards_"/> -->
+		<!--<mapping class="com.unipoint.merchant.model.MerchantCustomer_"/> -->
+		<mapping class="com.unipoint.merchant.model.MerchantFeedback" />
+		<!--<mapping class="com.unipoint.merchant.model.MerchantFeedback_"/> -->
+		<mapping class="com.unipoint.merchant.model.MerchantProfile" />
+		<!--<mapping class="com.unipoint.merchant.model.MerchantProfile_"/> -->
+		<mapping class="com.unipoint.merchant.model.MerchantUser" />
+		<!--<mapping class="com.unipoint.merchant.model.MerchantUser_"/> -->
+		<!--<mapping class="com.unipoint.merchant.model.Merchant_"/> -->
+		<mapping class="com.unipoint.merchant.model.Offer" />
+		<mapping class="com.unipoint.merchant.model.OfferClaim" />
+		<!--<mapping class="com.unipoint.merchant.model.OfferClaim_"/> -->
+		<mapping class="com.unipoint.merchant.model.OfferReservation" />
+		<!--<mapping class="com.unipoint.merchant.model.OfferReservation_"/> -->
+		<!--<mapping class="com.unipoint.merchant.model.Offer_"/> -->
+		<mapping class="com.unipoint.merchant.model.Organization" />
+		<!--<mapping class="com.unipoint.merchant.model.Organization_"/> -->
+		<mapping class="com.unipoint.merchant.model.Outlet" />
+		<!--<mapping class="com.unipoint.merchant.model.Outlet_"/> -->
+		<mapping class="com.unipoint.merchant.model.PasswordChangeRequest" />
+		<!--<mapping class="com.unipoint.merchant.model.PasswordChangeRequest_"/> -->
+		<mapping class="com.unipoint.merchant.model.Payment" />
+		<!--<mapping class="com.unipoint.merchant.model.Payment_"/> -->
+		<mapping class="com.unipoint.merchant.model.PointConversion" />
+		<!--<mapping class="com.unipoint.merchant.model.PointConversion_"/> -->
+		<mapping class="com.unipoint.merchant.model.PointRewardType" />
+		<!--<mapping class="com.unipoint.merchant.model.PointRewardType_"/> -->
+		<!--<mapping class="com.unipoint.merchant.model.PointRewards_"/> -->
+		<mapping class="com.unipoint.merchant.model.PointRewards" />
+		<mapping class="com.unipoint.merchant.model.Product" />
+		<!--<mapping class="com.unipoint.merchant.model.Product_"/> -->
+		<mapping class="com.unipoint.merchant.model.RecoImage" />
+		<!--<mapping class="com.unipoint.merchant.model.RecoImage_"/> -->
+		<mapping class="com.unipoint.merchant.model.SubmittedFeedback" />
+		<!--<mapping class="com.unipoint.merchant.model.SubmittedFeedback_"/> -->
+		<mapping class="com.unipoint.merchant.model.SubscribeMerchant" />
+		<!--<mapping class="com.unipoint.merchant.model.SubscribeMerchant_"/> -->
+		<mapping class="com.unipoint.merchant.model.Transaction" />
+		<!--<mapping class="com.unipoint.merchant.model.Transaction_"/> -->
+		<mapping class="com.unipoint.merchant.model.UnipointCustomerProfile" />
+		<!--<mapping class="com.unipoint.merchant.model.UnipointCustomerProfile_"/> -->
+		<mapping class="com.unipoint.merchant.model.UnipointcustomerAdvanced" />
+		<!--<mapping class="com.unipoint.merchant.model.UnipointcustomerAdvanced_"/> -->
+		<mapping class="com.unipoint.merchant.model.Vouchers" />
+		<!--<mapping class="com.unipoint.merchant.model.Vouchers_"/> -->
+		<mapping class="com.unipoint.merchant.model.Wishlist" />
+		<!--<mapping class="com.unipoint.merchant.model.Wishlist_"/> -->
+		<mapping class="com.unipoint.merchant.model.OfferLeaflet" />
+    </session-factory>    
 </hibernate-configuration>

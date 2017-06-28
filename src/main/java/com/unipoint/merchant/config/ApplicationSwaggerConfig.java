@@ -29,7 +29,7 @@ public class ApplicationSwaggerConfig{
                 "Unipoint Web Service Merchant",
                 "description",
                 "1.0.0",
-                "http://127.0.0.1:8080/UnipointWebServiceMerchantRest/v2/api-docs",
+                "http://localhost:8080/UnipointWebServiceMerchantRest",
                 "liupeidong8956@163.com",
                 "Apache License",
                 "http://www.apache.org/licenses/LICENSE-2.0.html"
