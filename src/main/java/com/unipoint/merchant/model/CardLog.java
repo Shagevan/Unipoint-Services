@@ -3,9 +3,12 @@ package com.unipoint.merchant.model;// Generated Oct 18, 2016 4:59:22 PM by Hibe
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -44,7 +47,8 @@ public class CardLog implements java.io.Serializable {
 	}
 
 	@Id
-
+	@SequenceGenerator(name="pk_sequence",sequenceName="unipointmain.mech_cus_cal_pk_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_sequence")
 	@Column(name = "cardlogid", unique = true, nullable = false)
 	public long getCardlogid() {
 		return this.cardlogid;

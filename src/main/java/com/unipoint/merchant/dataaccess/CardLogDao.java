@@ -7,6 +7,6 @@ import com.unipoint.merchant.model.CardLog;
 public interface CardLogDao {
 	public void addCardLog(CardLog cardLog);
 	public List<CardLog> getAllCardLog();
-	public void deleteCardLog(int cardLogId);
-	public CardLog getCardLog(int cardLogId);
+	public void deleteCardLog(long cardLogId);
+	public CardLog getCardLog(long cardLogId);
 }

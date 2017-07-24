@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.unipoint.merchant.dataaccess.SubscribeMerchantDao;
+import com.unipoint.merchant.model.Merchant;
 import com.unipoint.merchant.model.SubscribeMerchant;
 import com.unipoint.merchant.model.UnipointCustomerProfile;
 
@@ -18,23 +19,29 @@ public class SubscribeMerchantDaoImpl implements SubscribeMerchantDao{
 	private SessionFactory session;
 
 	@Override
-	public SubscribeMerchant getSubscribeMerchant(int customerRefId) {
-		return (SubscribeMerchant) session.getCurrentSession().get(SubscribeMerchant.class,
-				customerRefId);
+	public SubscribeMerchant getSubscribeMerchant(UnipointCustomerProfile unipointCustomerProfile, Merchant merchant) {
+		Query hqlquery=session.getCurrentSession().createQuery("from SubscribeMerchant where unipointCustomerProfile= :unipointCustomerProfile"
+				+ " and merchant= :merchant");
+		hqlquery.setParameter("unipointCustomerProfile", unipointCustomerProfile);
+		hqlquery.setParameter("merchant", merchant);
+		return (SubscribeMerchant) hqlquery.uniqueResult();
+		
 	}
 	
 	@Override
-	public void updatePoints(String code, UnipointCustomerProfile unipointCustomerProfile, double points){
+	public void updatePoints(String code, UnipointCustomerProfile unipointCustomerProfile, Merchant merchant, double points){
 		
-		Query first_query = session.getCurrentSession().createQuery("from SubscribeMerchant where unipointCustomerProfile = :unipointCustomerProfile");
+		Query first_query = session.getCurrentSession().createQuery("from SubscribeMerchant where unipointCustomerProfile= :unipointCustomerProfile"
+				+ " and merchant= :merchant");
 		first_query.setParameter("unipointCustomerProfile", unipointCustomerProfile);
-		SubscribeMerchant merchant = (SubscribeMerchant) first_query.uniqueResult();
+		first_query.setParameter("merchant", merchant);
+		SubscribeMerchant subscribedMerchant = (SubscribeMerchant) first_query.uniqueResult();
 		BigDecimal updatedPoints;
 		if(code.equals("Add")){
-			updatedPoints = merchant.getTotalpoints().add(BigDecimal.valueOf(points));
+			updatedPoints = subscribedMerchant.getTotalpoints().add(BigDecimal.valueOf(points));
 		}
 		else{
-			updatedPoints = merchant.getTotalpoints().subtract(BigDecimal.valueOf(points));
+			updatedPoints = subscribedMerchant.getTotalpoints().subtract(BigDecimal.valueOf(points));
 		}
 		
 		Query second_query = session.getCurrentSession().createQuery("update SubscribeMerchant set totalpoints = :totalpoints" +

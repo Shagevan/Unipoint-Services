@@ -27,11 +27,11 @@ public class OffersServiceImpl implements OffersService {
 	private OfferDao offerRepository;
 
 	@Transactional
-	public OfferClaimHistoryResponse getOfferClaimingHistory(int merchantUserRefId) {
+	public OfferClaimHistoryResponse getOfferClaimingHistory(String merchantUserRefId) {
 		
 		OfferClaimHistoryResponse response = new OfferClaimHistoryResponse();
 		List<OfferClaimHistory> offerClaimHistories = new ArrayList<>();
-		List<OfferClaim> offerClaims = offerClaimRepository.getOfferClaim(new MerchantUser(Long.valueOf(String.valueOf(merchantUserRefId))));
+		List<OfferClaim> offerClaims = offerClaimRepository.getOfferClaim(new MerchantUser(Long.valueOf(merchantUserRefId)));
 		if(offerClaims != null){
 			for (OfferClaim offerClaim : offerClaims) {
 				OfferClaimHistory obj = new OfferClaimHistory();
@@ -54,15 +54,15 @@ public class OffersServiceImpl implements OffersService {
 		return response;
 	}
 
-	@Override
-	public OfferClaimHistoryResponse releaseOffer(int offerRefId, int merchantUserRefId, int unipointCustomerRefId, int pointsAdded) {
+	@Transactional
+	public OfferClaimHistoryResponse releaseOffer(String offerRefId, String merchantUserRefId, String unipointCustomerRefId, String pointsAdded) {
 		
 		OfferClaim offerClaim = new OfferClaim();
-		offerClaim.setUnipointCustomerProfile(new UnipointCustomerProfile(Long.valueOf(String.valueOf(unipointCustomerRefId))));
-		offerClaim.setMerchantUserByAddedByRef(new MerchantUser(Long.valueOf(String.valueOf(merchantUserRefId))));
-		offerClaim.setMerchantUserByLastModifiedByRef(new MerchantUser(Long.valueOf(String.valueOf(merchantUserRefId))));
-		offerClaim.setMerchantPointsAdded(Float.valueOf(String.valueOf(pointsAdded)));
-		offerClaim.setOffer(new Offer(Long.valueOf(String.valueOf(offerRefId))));
+		offerClaim.setUnipointCustomerProfile(new UnipointCustomerProfile(Long.valueOf(unipointCustomerRefId)));
+		offerClaim.setMerchantUserByAddedByRef(new MerchantUser(Long.valueOf(merchantUserRefId)));
+		offerClaim.setMerchantUserByLastModifiedByRef(new MerchantUser(Long.valueOf(merchantUserRefId)));
+		offerClaim.setMerchantPointsAdded(Float.valueOf(pointsAdded));
+		offerClaim.setOffer(new Offer(Long.valueOf(offerRefId)));
 		
 		offerClaimRepository.addOfferClaim(offerClaim);
 		return getOfferClaimingHistory(merchantUserRefId);

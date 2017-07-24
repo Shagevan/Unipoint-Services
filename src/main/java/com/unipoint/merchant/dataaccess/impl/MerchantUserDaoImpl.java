@@ -24,7 +24,7 @@ public class MerchantUserDaoImpl implements MerchantUserDao{
 	}
 
 	@Override
-	public MerchantUser getMerchantUserById(int merchantUserRefId) {
+	public MerchantUser getMerchantUserById(long merchantUserRefId) {
 		return (MerchantUser) session.getCurrentSession().get(MerchantUser.class,
 				merchantUserRefId);
 	}

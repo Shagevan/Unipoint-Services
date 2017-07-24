@@ -31,32 +31,34 @@ public class TransactionDaoImpl implements TransactionDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Transaction> getTransactions(Merchant merchantRefId, Outlet outletRefId) {
-		Query query = session.getCurrentSession().createQuery("from Transaction where outlet = :outletRefId and "
-				+ "merchant = :merchantRefId");
-		query.setParameter("merchantRefId", merchantRefId);
+	public List<Transaction> getTransactions(Outlet outletRefId) {
+		Query query = session.getCurrentSession().createQuery("from Transaction where outlet= :outletRefId");
 		query.setParameter("outletRefId", outletRefId);
 		List<Transaction> response = query.list();
 		return response;
 	}
 
-	public void deleteTransaction(int invoiceNumber) {
+	public void deleteTransaction(String invoiceNumber) {
 		session.getCurrentSession().delete(getTransaction(invoiceNumber));
 	}
 
-	public Transaction getTransaction(int invoiceNumber) {
-		return (Transaction) session.getCurrentSession().get(Transaction.class,
-				invoiceNumber);
+	public Transaction getTransaction(String invoiceNumber) {
+		Query hqlquery=session.getCurrentSession().createQuery("from Transaction where invoiceNumber = :invoiceNumber");
+		hqlquery.setParameter("invoiceNumber", invoiceNumber);
+		return (Transaction) hqlquery.uniqueResult();
 	}
 	
-	public void updateTransaction(UnipointCustomerProfile unipointCustomerProfile, int invoiceNumber, Float points, String type) {
+	public void updateTransaction(UnipointCustomerProfile unipointCustomerProfile, Merchant merchant, 
+			String invoiceNumber, Float points, String type) {
 		
-		Query hqlquery=session.getCurrentSession().createQuery("from SubscribeMerchant where unipointCustomerProfile= :unipointCustomerProfile");
+		Query hqlquery=session.getCurrentSession().createQuery("from SubscribeMerchant where unipointCustomerProfile= :unipointCustomerProfile"
+				+ " and merchant= :merchant");
 		hqlquery.setParameter("unipointCustomerProfile", unipointCustomerProfile);
+		hqlquery.setParameter("merchant", merchant);
 		SubscribeMerchant result = (SubscribeMerchant) hqlquery.uniqueResult();
 		
 		if(result.getEnabled().equals("false")){
-			Query query = session.getCurrentSession().createQuery("update SubscribeMerchant set enabled = :points" +
+			Query query = session.getCurrentSession().createQuery("update SubscribeMerchant set enabled= :enabled" +
 					" where unipointCustomerProfile = :unipointCustomerProfile");
 			query.setParameter("enabled", "true");
 			query.setParameter("unipointCustomerProfile", unipointCustomerProfile);

@@ -17,7 +17,6 @@ import com.unipoint.merchant.dataaccess.UniPointCustomerProfileDao;
 import com.unipoint.merchant.model.CardLog;
 import com.unipoint.merchant.model.LoyaltyScheme;
 import com.unipoint.merchant.model.MerchantUser;
-import com.unipoint.merchant.model.Outlet;
 import com.unipoint.merchant.model.PointConversion;
 import com.unipoint.merchant.model.PointRewards;
 import com.unipoint.merchant.model.SubscribeMerchant;
@@ -55,15 +54,14 @@ public class PointsServiceImpl implements PointsService{
 	private MerchantUserDao merchantUserRepository;
 	
 	@Transactional
-	public TransctionHistoryResponse addPointsFromInvoice(String customerMobileNumber,int invoiceNumber,int merchantUserRefId, int outletRefId) {
+	public TransctionHistoryResponse addPointsFromInvoice(String customerMobileNumber,String invoiceNumber,String merchantUserRefId) {
 		TransctionHistoryResponse response = new TransctionHistoryResponse();
 		List<TransactionHistory> transactionHistories = new ArrayList<>();
-		String sMerchantRefId = String.valueOf(merchantUserRefId);
 		UnipointCustomerProfile user = uniPointCustomerProfileRepository.getUniPointCustomerByMobile(customerMobileNumber);
 		if(user != null){
 			Transaction transaction = transactionRepository.getTransaction(invoiceNumber);
 			if(transaction != null){
-				MerchantUser merchantUser = merchantUserRepository.getMerchantUserById(merchantUserRefId);
+				MerchantUser merchantUser = merchantUserRepository.getMerchantUserById(Long.valueOf(merchantUserRefId));
 				if(merchantUser != null){
 					PointConversion pointConversion = pointConversionRepository.getPointConvrsion(merchantUser.getMerchant());
 					if(pointConversion != null){
@@ -74,7 +72,7 @@ public class PointsServiceImpl implements PointsService{
 						pointRewards.setUnipointCustomerProfile(user);
 						pointRewards.setPoints(Double.valueOf(sPoints));
 						pointRewards.setDescription("Addition of points");
-						pointRewards.setAwardedByRefId(Long.valueOf(sMerchantRefId));
+						pointRewards.setAwardedByRefId(Long.valueOf(merchantUserRefId));
 						
 						CardLog cardLog = new CardLog();
 						cardLog.setActivity("Points Addition");
@@ -82,11 +80,11 @@ public class PointsServiceImpl implements PointsService{
 						cardLog.setUnipointCustomerProfile(user);
 						cardLog.setMerchant(merchantUser.getMerchant());
 						
-						transactionRepository.updateTransaction(user, invoiceNumber, Float.valueOf(sPoints), "Award");
+						transactionRepository.updateTransaction(user, merchantUser.getMerchant(), invoiceNumber, Float.valueOf(sPoints), "Award");
 						pointsRewardsRepository.addPointRewards(pointRewards);
 						cardLogRepository.addCardLog(cardLog);
-						subscribeMerchantRepository.updatePoints("Add", user, Double.valueOf(sPoints));
-						List<Transaction> transactions = transactionRepository.getTransactions(merchantUser.getMerchant(), new Outlet(outletRefId));
+						subscribeMerchantRepository.updatePoints("Add", user, merchantUser.getMerchant(), Double.valueOf(sPoints));
+						List<Transaction> transactions = transactionRepository.getTransactions(merchantUser.getOutlet());
 						if(transactions != null){
 							for (Transaction object : transactions) {
 								TransactionHistory obj = new TransactionHistory();
@@ -134,26 +132,23 @@ public class PointsServiceImpl implements PointsService{
 	}
 	
 	@Transactional
-	public TransctionHistoryResponse addPointsFromAmount(String customerMobileNumber,int billAmount,int merchantUserRefId, int outletRefId) {
+	public TransctionHistoryResponse addPointsFromAmount(String customerMobileNumber,String billAmount,String merchantUserRefId, String transactionType) {
 		TransctionHistoryResponse response = new TransctionHistoryResponse();
 		List<TransactionHistory> transactionHistories = new ArrayList<>();
-		String sMerchantRefId = String.valueOf(merchantUserRefId);
-		String sBillAmount = String.valueOf(billAmount);
 		UnipointCustomerProfile user = uniPointCustomerProfileRepository.getUniPointCustomerByMobile(customerMobileNumber);
 		if(user != null){
-			String unipointCustomerRefId = String.valueOf(user.getUnipointcustomerid());
-			MerchantUser merchantUser = merchantUserRepository.getMerchantUserById(merchantUserRefId);
+			MerchantUser merchantUser = merchantUserRepository.getMerchantUserById(Long.valueOf(merchantUserRefId));
 			if(merchantUser != null){
 				PointConversion pointConversion = pointConversionRepository.getPointConvrsion(merchantUser.getMerchant());
 				if(pointConversion != null){
-					Float points = billAmount * pointConversion.getPointsForCurrencyValue();
+					Float points = Float.valueOf(billAmount) * pointConversion.getPointsForCurrencyValue();
 					String sPoints = String.valueOf(points);
 					
 					PointRewards pointRewards = new PointRewards();
 					pointRewards.setUnipointCustomerProfile(user);
 					pointRewards.setPoints(Double.valueOf(sPoints));
 					pointRewards.setDescription("Addition of points");
-					pointRewards.setAwardedByRefId(Long.valueOf(sMerchantRefId));
+					pointRewards.setAwardedByRefId(Long.valueOf(merchantUserRefId));
 					
 					CardLog cardLog = new CardLog();
 					cardLog.setActivity("Points Addition");
@@ -162,19 +157,18 @@ public class PointsServiceImpl implements PointsService{
 					cardLog.setMerchant(merchantUser.getMerchant());
 					
 					Transaction transaction = new Transaction();
-					transaction.setPointsRedeemed(Float.valueOf(sPoints));
-					transaction.setSubscribeMerchant(subscribeMerchantRepository.getSubscribeMerchant(Integer.parseInt(unipointCustomerRefId)));
-					transaction.setOutlet(new Outlet(outletRefId));
-					transaction.setTotalBillValue(Double.valueOf(sBillAmount));
+					transaction.setSubscribeMerchant(subscribeMerchantRepository.getSubscribeMerchant(user,merchantUser.getMerchant()));
+					transaction.setOutlet(merchantUser.getOutlet());
+					transaction.setTotalBillValue(Double.valueOf(billAmount));
 					transaction.setPointsAwarded(points);
 					transaction.setUnipointCustomerProfile(user);
-					// need to add transaction ID
+					transaction.setTransactionType(transactionType);
 					
 					transactionRepository.addTransaction(transaction);
 					pointsRewardsRepository.addPointRewards(pointRewards);
 					cardLogRepository.addCardLog(cardLog);
-					subscribeMerchantRepository.updatePoints("Add", user, Double.valueOf(sPoints));
-					List<Transaction> transactions = transactionRepository.getTransactions(merchantUser.getMerchant(), new Outlet(outletRefId));
+					subscribeMerchantRepository.updatePoints("Add", user, merchantUser.getMerchant(), Double.valueOf(sPoints));
+					List<Transaction> transactions = transactionRepository.getTransactions(merchantUser.getOutlet());
 					if(transactions != null){
 						for (Transaction object : transactions) {
 							TransactionHistory obj = new TransactionHistory();
@@ -220,29 +214,26 @@ public class PointsServiceImpl implements PointsService{
 	
 	
 	@Transactional
-	public TransctionHistoryResponse redeemPoints(String customerMobileNumber,double billValue, double points, 
-			int merchantUserRefId, int outletRefId){
+	public TransctionHistoryResponse redeemPoints(String customerMobileNumber,String billValue, String points, String merchantUserRefId, String transactionType){
 		TransctionHistoryResponse response = new TransctionHistoryResponse();
 		List<TransactionHistory> transactionHistories = new ArrayList<>();
 		Double reducedAmount;
 		Double updatedBillValue;
-		String sPoints = String.valueOf(points);
-		MerchantUser merchantUser = merchantUserRepository.getMerchantUserById(merchantUserRefId);
+		MerchantUser merchantUser = merchantUserRepository.getMerchantUserById(Long.valueOf(merchantUserRefId));
 		if(merchantUser != null){
 			PointConversion pointConversion = pointConversionRepository.getPointConvrsion(merchantUser.getMerchant());
 			if(pointConversion != null){
-				reducedAmount = points / pointConversion.getPointsForCurrencyValue();
-				updatedBillValue = billValue - reducedAmount;
+				reducedAmount = Double.valueOf(points) / pointConversion.getPointsForCurrencyValue();
+				updatedBillValue = Double.valueOf(billValue) - reducedAmount;
 				UnipointCustomerProfile user = uniPointCustomerProfileRepository.getUniPointCustomerByMobile(customerMobileNumber);
 			if(user != null){
-				String sCustomerRefId = String.valueOf(user.getUnipointcustomerid());
-				SubscribeMerchant subscribeMerchant = subscribeMerchantRepository.getSubscribeMerchant(Integer.valueOf(sCustomerRefId));
-				if(subscribeMerchant.getRedeemablepoints() >= points){
+				SubscribeMerchant subscribeMerchant = subscribeMerchantRepository.getSubscribeMerchant(user,merchantUser.getMerchant());
+				if(Double.valueOf(subscribeMerchant.getTotalpoints().toString()) >= Double.valueOf(points)){
 					PointRewards pointRewards = new PointRewards();
 					pointRewards.setUnipointCustomerProfile(user);
-					pointRewards.setPoints(Double.valueOf(sPoints));
+					pointRewards.setPoints(Double.valueOf(points));
 					pointRewards.setDescription("Redeemption of points");
-					pointRewards.setAwardedByRefId(Long.valueOf(String.valueOf(merchantUserRefId)));
+					pointRewards.setAwardedByRefId(Long.valueOf(merchantUserRefId));
 					
 					CardLog cardLog = new CardLog();
 					cardLog.setActivity("Points Redeemption");
@@ -251,16 +242,18 @@ public class PointsServiceImpl implements PointsService{
 					cardLog.setMerchant(merchantUser.getMerchant());
 					
 					Transaction transaction = new Transaction();
-					transaction.setPointsRedeemed(Float.valueOf(sPoints));
+					transaction.setPointsRedeemed(Float.valueOf(points));
 					transaction.setSubscribeMerchant(subscribeMerchant);
-					transaction.setOutlet(new Outlet(outletRefId));
+					transaction.setOutlet(merchantUser.getOutlet());
 					transaction.setTotalBillValue(updatedBillValue);
+					transaction.setUnipointCustomerProfile(user);
+					transaction.setTransactionType(transactionType);
 					
 					pointsRewardsRepository.addPointRewards(pointRewards);
 					cardLogRepository.addCardLog(cardLog);
-					subscribeMerchantRepository.updatePoints("Redeem", user, points);
+					subscribeMerchantRepository.updatePoints("Redeem", user, merchantUser.getMerchant(),  Double.valueOf(points));
 					transactionRepository.addTransaction(transaction);
-					List<Transaction> transactions = transactionRepository.getTransactions(merchantUser.getMerchant(), new Outlet(outletRefId));
+					List<Transaction> transactions = transactionRepository.getTransactions(merchantUser.getOutlet());
 					if(transactions != null){
 						for (Transaction object : transactions) {
 							TransactionHistory obj = new TransactionHistory();
@@ -307,12 +300,12 @@ public class PointsServiceImpl implements PointsService{
 	}
 	
 	@Transactional
-	public TransctionHistoryResponse getTransactionHistory(int merchantUserRefId, int outletRefId){
+	public TransctionHistoryResponse getTransactionHistory(String merchantUserRefId){
 		TransctionHistoryResponse response = new TransctionHistoryResponse();
 		List<TransactionHistory> transactionHistories = new ArrayList<>();
-		MerchantUser merchantUser = merchantUserRepository.getMerchantUserById(merchantUserRefId);
+		MerchantUser merchantUser = merchantUserRepository.getMerchantUserById(Long.valueOf(merchantUserRefId));
 		if(merchantUser != null){
-			List<Transaction> transactions = transactionRepository.getTransactions(merchantUser.getMerchant(), new Outlet(outletRefId));
+			List<Transaction> transactions = transactionRepository.getTransactions(merchantUser.getOutlet());
 			if(transactions != null){
 				for (Transaction object : transactions) {
 					TransactionHistory obj = new TransactionHistory();

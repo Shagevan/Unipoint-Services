@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unipoint.merchant.dataaccess.LoyaltySchemeDao;
 import com.unipoint.merchant.dataaccess.MerchantUserDao;
 import com.unipoint.merchant.dataaccess.SubscribeMerchantDao;
-import com.unipoint.merchant.dataaccess.UniPointCustomerProfileDao;
 import com.unipoint.merchant.model.LoyaltyScheme;
 import com.unipoint.merchant.model.MerchantUser;
 import com.unipoint.merchant.model.Outlet;
@@ -28,8 +27,6 @@ public class MerchantUserServiceImpl implements MerchantUserService{
 	@Autowired
 	private LoyaltySchemeDao loyaltySchemeRepository;
 	
-	@Autowired
-	private UniPointCustomerProfileDao uniPointCustomerProfileRepository;
 	
 	@Transactional
 	public MerchantUserLoginResponse login(String username, String password){
@@ -39,9 +36,11 @@ public class MerchantUserServiceImpl implements MerchantUserService{
 		if(user != null){
 			Outlet outlet = user.getOutlet();
 			response.setMerchantUserName(user.getFirstname());
-			response.setMerchantUserName(String.valueOf(user.getMerchantUserId()));
+			response.setMerchantUserRefId(String.valueOf(user.getMerchantUserId()));
 			response.setOutletName(outlet.getOutletname());
 			response.setOutletRefId(String.valueOf(outlet.getOutletid()));
+			response.setMerchantName(user.getMerchant().getMerchantName());
+			response.setMerchantRefId(String.valueOf(user.getMerchant().getMerchantId()));
 			response.setStatus("true");
 		}
 		else{
@@ -55,21 +54,24 @@ public class MerchantUserServiceImpl implements MerchantUserService{
 		GetCustomerDetailResponse response = new GetCustomerDetailResponse();
 		SubscribeMerchant subscribeMerchant = subscribeMerchantRepository.getSubscribeMerchantByCardNumber(cardNumber);
 		if(subscribeMerchant != null){
-			response.setCardNumber(cardNumber);
-			response.setCardStatus(subscribeMerchant.getEnabled());
-			response.setTotalPoints(String.valueOf(subscribeMerchant.getTotalpoints()));
-			String sSchemeRefId = String.valueOf(subscribeMerchant.getSchemerefid());
-			LoyaltyScheme loyaltyScheme = loyaltySchemeRepository.getLoyaltyScheme(Long.valueOf(sSchemeRefId));
-			if(loyaltyScheme != null){
-				response.setSchemeLevel(loyaltyScheme.getSchemeName());
+			if(subscribeMerchant.getUnipointCustomerProfile() != null){
+				response.setUnipointCustomerRefId(String.valueOf(subscribeMerchant.getUnipointCustomerProfile().getUnipointcustomerid()));
+				response.setCardNumber(cardNumber);
+				response.setCardStatus(subscribeMerchant.getEnabled());
+				response.setTotalPoints(String.valueOf(subscribeMerchant.getTotalpoints()));
+				String sSchemeRefId = String.valueOf(subscribeMerchant.getSchemerefid());
+				LoyaltyScheme loyaltyScheme = loyaltySchemeRepository.getLoyaltyScheme(Long.valueOf(sSchemeRefId));
+				if(loyaltyScheme != null){
+					response.setSchemeLevel(loyaltyScheme.getSchemeName());
+				}
+				else{
+					response.setError("No Loyalty scheme");
+				}
+				response.setFirstName(subscribeMerchant.getUnipointCustomerProfile().getCustomerfirstname());
+				response.setLastName(subscribeMerchant.getUnipointCustomerProfile().getCustomerlastname());
+				response.setPrimaryMobileNumber(subscribeMerchant.getUnipointCustomerProfile().getMobilephonenumberprimary());
+				response.setSecondaryMobileNumber(subscribeMerchant.getUnipointCustomerProfile().getMobilephonenumbersecondary());
 			}
-			else{
-				response.setError("No Loyalty scheme");
-			}
-			response.setFirstName(subscribeMerchant.getUnipointCustomerProfile().getCustomerfirstname());
-			response.setLastName(subscribeMerchant.getUnipointCustomerProfile().getCustomerlastname());
-			response.setPrimaryMobileNumber(subscribeMerchant.getUnipointCustomerProfile().getMobilephonenumberprimary());
-			response.setSecondaryMobileNumber(subscribeMerchant.getUnipointCustomerProfile().getMobilephonenumbersecondary());
 		}
 		else{
 			response.setError("Invalid card number");

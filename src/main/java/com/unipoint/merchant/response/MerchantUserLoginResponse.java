@@ -7,6 +7,8 @@ public class MerchantUserLoginResponse {
 	private String outletRefId;
 	private String merchantUserName;
 	private String merchantUserRefId;
+	private String merchantName;
+	private String merchantRefId;
 	public String getStatus() {
 		return status;
 	}
@@ -36,6 +38,18 @@ public class MerchantUserLoginResponse {
 	}
 	public void setMerchantUserRefId(String merchantUserRefId) {
 		this.merchantUserRefId = merchantUserRefId;
+	}
+	public String getMerchantName() {
+		return merchantName;
+	}
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
+	public String getMerchantRefId() {
+		return merchantRefId;
+	}
+	public void setMerchantRefId(String merchantRefId) {
+		this.merchantRefId = merchantRefId;
 	}
 	
 }

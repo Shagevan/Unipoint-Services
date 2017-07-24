@@ -7,7 +7,7 @@ import com.unipoint.merchant.model.UnipointCustomerProfile;
 public interface UniPointCustomerProfileDao {
 	public void addUniPointCustomerProfile(UnipointCustomerProfile uniPointCustomer);
 	public List<UnipointCustomerProfile> getAllUniPointCustomerProfile();
-	public void deleteUniPointCustomerProfile(int uniPointCustomerId);
-	public UnipointCustomerProfile getUniPointCustomerProfile(int uniPointCustomerId);
+	public void deleteUniPointCustomerProfile(long uniPointCustomerId);
+	public UnipointCustomerProfile getUniPointCustomerProfile(long uniPointCustomerId);
 	public UnipointCustomerProfile getUniPointCustomerByMobile(String mobileNumber);
 }

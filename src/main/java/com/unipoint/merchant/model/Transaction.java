@@ -4,9 +4,12 @@ package com.unipoint.merchant.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -62,7 +65,8 @@ public class Transaction implements java.io.Serializable {
 	}
 
 	@Id
-
+	@SequenceGenerator(name="pk_sequence",sequenceName="unipointmain.cus_trans_pk_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_sequence")
 	@Column(name = "transaction_id", unique = true, nullable = false)
 	public long getTransactionId() {
 		return this.transactionId;

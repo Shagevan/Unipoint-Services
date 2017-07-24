@@ -18,29 +18,29 @@ public class PointsController {
 
 	@RequestMapping(value = "/addFromInvoice", method = RequestMethod.POST, produces = "application/json")
 	public @ResponseBody
-	TransctionHistoryResponse addPointsFromInvoice(@RequestParam String customerMobileNumber, @RequestParam int invoiceNumber, 
-			@RequestParam int merchantUserRefId, @RequestParam int outletRefId) {
-		return pointsService.addPointsFromInvoice(customerMobileNumber,invoiceNumber,merchantUserRefId, outletRefId);
+	TransctionHistoryResponse addPointsFromInvoice(@RequestParam String customerMobileNumber, @RequestParam String invoiceNumber, 
+			@RequestParam String merchantUserRefId) {
+		return pointsService.addPointsFromInvoice(customerMobileNumber,invoiceNumber,merchantUserRefId);
 	}
 	
 	@RequestMapping(value = "/addFromAmount", method = RequestMethod.POST, produces = "application/json")
 	public @ResponseBody
-	TransctionHistoryResponse addPointsFromAmount(@RequestParam String customerMobileNumber, @RequestParam int billAmount,
-			@RequestParam int merchantUserRefId, @RequestParam int outletRefId) {
-		return pointsService.addPointsFromAmount(customerMobileNumber,billAmount,merchantUserRefId,outletRefId);
+	TransctionHistoryResponse addPointsFromAmount(@RequestParam String customerMobileNumber, @RequestParam String billAmount,
+			@RequestParam String merchantUserRefId, @RequestParam String transactionType) {
+		return pointsService.addPointsFromAmount(customerMobileNumber,billAmount,merchantUserRefId,transactionType);
 	}
 	
 	@RequestMapping(value = "/getTransactionHistory", method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody
-	TransctionHistoryResponse getTransactionHistory(@RequestParam int merchantUserRefId, @RequestParam int outletRefId) {
-		return pointsService.getTransactionHistory(merchantUserRefId,outletRefId);
+	TransctionHistoryResponse getTransactionHistory(@RequestParam String merchantUserRefId) {
+		return pointsService.getTransactionHistory(merchantUserRefId);
 	}
 	
 	@RequestMapping(value = "/redeem", method = RequestMethod.POST, produces = "application/json")
 	public @ResponseBody
-	TransctionHistoryResponse redeemPoints(@RequestParam String customerMobileNumber, @RequestParam double billValue,
-			@RequestParam double points, @RequestParam int merchantUserRefId, @RequestParam int outletRefId) {
-		return pointsService.redeemPoints(customerMobileNumber,billValue, points, merchantUserRefId, outletRefId);
+	TransctionHistoryResponse redeemPoints(@RequestParam String customerMobileNumber, @RequestParam String billValue,
+			@RequestParam String points, @RequestParam String merchantUserRefId, @RequestParam String transactionType) {
+		return pointsService.redeemPoints(customerMobileNumber,billValue, points, merchantUserRefId, transactionType);
 	}
 	
 }

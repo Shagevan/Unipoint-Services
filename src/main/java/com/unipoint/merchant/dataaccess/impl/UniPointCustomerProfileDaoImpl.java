@@ -25,23 +25,19 @@ public class UniPointCustomerProfileDaoImpl implements UniPointCustomerProfileDa
 		return session.getCurrentSession().createQuery("from unipoint_customer_profile").list();
 	}
 
-	public void deleteUniPointCustomerProfile(int uniPointCustomerId) {
+	public void deleteUniPointCustomerProfile(long uniPointCustomerId) {
 		session.getCurrentSession().delete(getUniPointCustomerProfile(uniPointCustomerId));
 	}
 
-	public UnipointCustomerProfile getUniPointCustomerProfile(int uniPointCustomerId) {
+	public UnipointCustomerProfile getUniPointCustomerProfile(long uniPointCustomerId) {
 		return (UnipointCustomerProfile) session.getCurrentSession().get(UnipointCustomerProfile.class,
 				uniPointCustomerId);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public UnipointCustomerProfile getUniPointCustomerByMobile(String mobileNumber) {
 		
-		//String hql = "from UnipointCustomerProfile where mobilephonenumberprimary= :mobileNumber "
-		//		+ "or mobilephonenumbersecondary= :mobileNumber";
-		
 		String hqlString = "from UnipointCustomerProfile where mobilephonenumbersecondary= :mobileNumber"
-				+ "or mobilephonenumberprimary= :mobileNumber";
+				+ " or mobilephonenumberprimary= :mobileNumber";
 		
 		Query query=session.getCurrentSession().createQuery(hqlString);
 		query.setParameter("mobileNumber", mobileNumber);

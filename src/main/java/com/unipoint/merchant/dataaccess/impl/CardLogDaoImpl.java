@@ -23,11 +23,11 @@ public class CardLogDaoImpl implements CardLogDao{
 		return session.getCurrentSession().createQuery("from point_conversion").list();
 	}
 
-	public void deleteCardLog(int cardLogId) {
+	public void deleteCardLog(long cardLogId) {
 		session.getCurrentSession().delete(getCardLog(cardLogId));
 	}
 
-	public CardLog getCardLog(int cardLogId) {
+	public CardLog getCardLog(long cardLogId) {
 		return (CardLog) session.getCurrentSession().get(CardLog.class,
 				cardLogId);
 	}

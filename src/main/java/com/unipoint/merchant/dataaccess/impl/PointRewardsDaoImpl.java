@@ -4,11 +4,9 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.unipoint.merchant.dataaccess.PointConversionDao;
 import com.unipoint.merchant.dataaccess.PointRewardsDao;
-import com.unipoint.merchant.model.MerchantCustomer;
 import com.unipoint.merchant.model.PointRewards;
+import com.unipoint.merchant.model.UnipointCustomerProfile;
 
 @Repository
 public class PointRewardsDaoImpl implements PointRewardsDao {
@@ -25,17 +23,17 @@ public class PointRewardsDaoImpl implements PointRewardsDao {
 		return session.getCurrentSession().createQuery("from point_rewards").list();
 	}
 
-	public void deletePointRewards(int customerRefId) {
-		session.getCurrentSession().delete(getPointRewards(customerRefId));
+	public void deletePointRewards(UnipointCustomerProfile unipointCustomer) {
+		session.getCurrentSession().delete(getPointRewards(unipointCustomer));
 	}
 
-	public PointRewards getPointRewards(int customerRefId) {
+	public PointRewards getPointRewards(UnipointCustomerProfile unipointCustomer) {
 		return (PointRewards) session.getCurrentSession().get(PointRewards.class,
-				customerRefId);
+				unipointCustomer.getUnipointcustomerid());
 	}
 	
-	public void updatePointRewards(int customerRefId, PointRewards pointRewards) {
-		PointRewards obj = getPointRewards(customerRefId);
+	public void updatePointRewards(UnipointCustomerProfile unipointCustomer, PointRewards pointRewards) {
+		PointRewards obj = getPointRewards(unipointCustomer);
 		if(obj == null){
 			addPointRewards(pointRewards);
 		}

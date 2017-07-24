@@ -3,6 +3,6 @@ package com.unipoint.merchant.service;
 import com.unipoint.merchant.response.OfferClaimHistoryResponse;
 
 public interface OffersService {
-	public OfferClaimHistoryResponse getOfferClaimingHistory(int merchantUserRefId);
-	public OfferClaimHistoryResponse releaseOffer(int offerRefId, int merchantUserRefId, int unipointCustomerRefId, int pointsAdded);
+	public OfferClaimHistoryResponse getOfferClaimingHistory(String merchantUserRefId);
+	public OfferClaimHistoryResponse releaseOffer(String offerRefId, String merchantUserRefId, String unipointCustomerRefId, String pointsAdded);
 }

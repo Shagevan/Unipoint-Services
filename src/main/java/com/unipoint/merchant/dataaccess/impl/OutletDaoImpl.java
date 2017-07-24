@@ -27,13 +27,13 @@ public class OutletDaoImpl implements OutletDao{
 	}
 
 	@Override
-	public void deleteOutlet(int outletID) {
+	public void deleteOutlet(long outletID) {
 		session.getCurrentSession().delete(getOutlet(outletID));
 		
 	}
 
 	@Override
-	public Outlet getOutlet(int outletID) {
+	public Outlet getOutlet(long outletID) {
 		return (Outlet) session.getCurrentSession().get(Outlet.class,
 				outletID);
 	}

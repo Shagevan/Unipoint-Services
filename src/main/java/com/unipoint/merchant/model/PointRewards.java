@@ -6,10 +6,13 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -71,7 +74,8 @@ public class PointRewards implements java.io.Serializable {
 	}
 
 	@Id
-
+	@SequenceGenerator(name="pk_sequence",sequenceName="unipointmain.mech_cus_prw_pk_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_sequence")
 	@Column(name = "reward_id", unique = true, nullable = false)
 	public long getRewardId() {
 		return this.rewardId;
